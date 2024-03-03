@@ -395,18 +395,19 @@ def show_pause_screen():
 
     draw_text("ПАУЗА", pygame.font.Font(None, 30), (0, 0, 0), popup_surface, popup_width // 2, 25)
 
-    button_width = 80
-    button_height = 30
+    button_width = 150
+    button_height = 50
     button_spacing = 20
 
     play_button_rect = pygame.Rect((popup_width - button_width) // 2, 70, button_width, button_height)
     menu_button_rect = pygame.Rect((popup_width - button_width) // 2, 70 + button_height + button_spacing, button_width, button_height)
 
-    play_button_texture = pygame.image.load('data/menu_.png')
-    menu_button_texture = pygame.image.load('data/continue.png')
+    pygame.draw.rect(popup_surface, (200, 200, 255), play_button_rect, border_radius=5)
+    draw_text("Продолжить", pygame.font.Font(None, 25), (0, 0, 0), popup_surface, play_button_rect.centerx, play_button_rect.centery)
 
-    popup_surface.blit(play_button_texture, play_button_rect)
-    popup_surface.blit(menu_button_texture, menu_button_rect)
+    pygame.draw.rect(popup_surface, (200, 200, 255), menu_button_rect, border_radius=5)
+    draw_text("Меню", pygame.font.Font(None, 25), (0, 0, 0), popup_surface, menu_button_rect.centerx, menu_button_rect.centery)
+
 
     overlay = pygame.Surface((screen_width, screen_height), pygame.SRCALPHA)
     overlay.fill((0, 0, 0, 128))
