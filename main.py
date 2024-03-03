@@ -293,6 +293,9 @@ class Player:
         while waiting_for_close:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    pygame.mixer.music.load('data/fcec4eee249d72c.mp3')
+                    pygame.mixer.music.play()
+                    pygame.time.delay(450)
                     pygame.quit()
                     sys.exit()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -301,16 +304,27 @@ class Player:
                         waiting_for_close = False
                         self.current_level += 1
                         if self.current_level > len(self.levels):
+                            pygame.mixer.music.load('data/fcec4eee249d72c.mp3')
+                            pygame.mixer.music.play()
+                            pygame.time.delay(450)
                             main_menu()
                         else:
+                            pygame.mixer.music.load('data/fcec4eee249d72c.mp3')
+                            pygame.mixer.music.play()
+                            pygame.time.delay(450)
                             run_game(self.current_level)
                         waiting_for_close = False
                     elif button2_rect.collidepoint(mouse_x - popup_x, mouse_y - popup_y):
+                        pygame.mixer.music.load('data/fcec4eee249d72c.mp3')
+                        pygame.mixer.music.play()
+                        pygame.time.delay(450)
                         level_menu()
                         waiting_for_close = False
 
 
 def main_menu():
+    pygame.mixer.music.load('data/48bb90af8e1e401.mp3')
+    pygame.mixer.music.play(-1)
     while True:
         background_main = pygame.image.load('data/background_main.png')
         screen.blit(background_main, (0, 0))
@@ -331,14 +345,23 @@ def main_menu():
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if play_button_rect.collidepoint(event.pos):
+                    pygame.mixer.music.stop()
+                    pygame.mixer.music.load('data/fcec4eee249d72c.mp3')
+                    pygame.mixer.music.play()
+                    pygame.time.delay(450)
                     level_menu()
                 if exit_button_rect.collidepoint(event.pos):
+                    pygame.mixer.music.load('data/fcec4eee249d72c.mp3')
+                    pygame.mixer.music.play()
+                    pygame.time.delay(450)
                     pygame.quit()
                     sys.exit()
 
         pygame.display.update()
 
 def level_menu():
+    pygame.mixer.music.load('data/cf0fc01247f4fc1.mp3')
+    pygame.mixer.music.play(-1)
     rows = 3  # К строк
     cols = 3  # К столбцов
     button_size = 80  # рзкнопки
@@ -373,6 +396,10 @@ def level_menu():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 for i, button in enumerate(level_buttons):
                     if button.collidepoint(event.pos):
+                        pygame.mixer.music.stop()
+                        pygame.mixer.music.load('data/fcec4eee249d72c.mp3')
+                        pygame.mixer.music.play()
+                        pygame.time.delay(450)
                         run_game(i + 1)
                 if back_button_rect.collidepoint(event.pos):
                     main_menu()
@@ -420,15 +447,25 @@ def show_pause_screen():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
                 if play_button_rect.collidepoint(mouse_x - popup_x, mouse_y - popup_y):
+                    pygame.mixer.music.load('data/fcec4eee249d72c.mp3')
+                    pygame.mixer.music.play()
+                    pygame.time.delay(450)
+                    pygame.mixer.music.load('data/c26baac1db252bd.mp3')
+                    pygame.mixer.music.play(-1)
                     waiting_for_close = False
                     global paused
                     paused = False
                 elif menu_button_rect.collidepoint(mouse_x - popup_x, mouse_y - popup_y):
+                    pygame.mixer.music.load('data/fcec4eee249d72c.mp3')
+                    pygame.mixer.music.play()
+                    pygame.time.delay(450)
                     main_menu()
                     waiting_for_close = False
 
 
 def run_game(level):
+    pygame.mixer.music.load('data/c26baac1db252bd.mp3')
+    pygame.mixer.music.play(-1)
     CELL_SIZE = 40
 
     player_texture = pygame.image.load('data/player.png')
@@ -482,7 +519,7 @@ def run_game(level):
             screen.blit(empty_inventory_texture, (10, 10))
 
 
-        pygame.draw.rect(screen, (90, 120, 147), (0, 0, screen_width, 50))
+        
         inventory_text = font.render("||", True, (46, 54, 63))
         back_button_rect = inventory_text.get_rect()
         back_button_rect.topleft = (760, 10)
