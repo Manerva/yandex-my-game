@@ -304,9 +304,7 @@ class Player:
                         self.current_level += 1
                         # Проверка что уровни не закончились
                         if self.current_level > len(self.levels):
-                            print("Поздравляем! Вы прошли все уровни!")
-                            pygame.quit()
-                            sys.exit()
+                            main_menu()
                         else:
                             # Запуск следующего уровня
                             run_game(self.current_level)
@@ -386,6 +384,55 @@ def level_menu():
 
         pygame.display.update()
 
+def show_pause_screen():
+    popup_width = 357
+    popup_height = 219
+    popup_x = (screen_width - popup_width) // 2
+    popup_y = (screen_height - popup_height) // 2
+
+    popup_surface = pygame.Surface((popup_width, popup_height), pygame.SRCALPHA)
+    pygame.draw.rect(popup_surface, (255, 210, 210), (0, 0, popup_width, popup_height), border_radius=10)
+
+    draw_text("ПАУЗА", pygame.font.Font(None, 30), (0, 0, 0), popup_surface, popup_width // 2, 25)
+
+    button_width = 80
+    button_height = 30
+    button_spacing = 20
+
+    play_button_rect = pygame.Rect((popup_width - button_width) // 2, 70, button_width, button_height)
+    menu_button_rect = pygame.Rect((popup_width - button_width) // 2, 70 + button_height + button_spacing, button_width, button_height)
+
+    play_button_texture = pygame.image.load('data/menu_.png')
+    menu_button_texture = pygame.image.load('data/continue.png')
+
+    popup_surface.blit(play_button_texture, play_button_rect)
+    popup_surface.blit(menu_button_texture, menu_button_rect)
+
+    overlay = pygame.Surface((screen_width, screen_height), pygame.SRCALPHA)
+    overlay.fill((0, 0, 0, 128))
+    screen.blit(overlay, (0, 0))
+
+    screen.blit(popup_surface, (popup_x, popup_y))
+    pygame.display.flip()
+
+    # Ожидание закрытия всплывающего окна
+    waiting_for_close = True
+    while waiting_for_close:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_x, mouse_y = pygame.mouse.get_pos()
+                if play_button_rect.collidepoint(mouse_x - popup_x, mouse_y - popup_y):
+                    waiting_for_close = False
+                    global paused
+                    paused = False  # Возобновление игры
+                elif menu_button_rect.collidepoint(mouse_x - popup_x, mouse_y - popup_y):
+                    main_menu()
+                    waiting_for_close = False
+
+
 def run_game(level):
     CELL_SIZE = 40
 
@@ -416,6 +463,24 @@ def run_game(level):
                     player.move(-1, 0)
                 elif event.key == pygame.K_RIGHT:
                     player.move(1, 0)
+                
+                elif event.key == pygame.K_w or event.key == pygame.K_UP:
+                    player.move(0, -1)
+                elif event.key == pygame.K_s or event.key == pygame.K_DOWN:
+                    player.move(0, 1)
+                elif event.key == pygame.K_a or event.key == pygame.K_LEFT:
+                    player.move(-1, 0)
+                elif event.key == pygame.K_d or event.key == pygame.K_RIGHT:
+                    player.move(1, 0)
+
+
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                # Проверка, был ли клик в пределах back_button_rect
+                if back_button_rect.collidepoint(event.pos):
+                    show_pause_screen()
+                    print("Клик на кнопке!")
+
         elapsed_time = player.update_timer()
         screen.fill((90, 120, 147))
         pygame.draw.rect(screen, (90, 120, 147), (0, 0, screen_width, 50))
@@ -425,6 +490,17 @@ def run_game(level):
             screen.blit(inventory_key_texture, (10, 10))
         else:
             screen.blit(empty_inventory_texture, (10, 10))
+
+
+        pygame.draw.rect(screen, (90, 120, 147), (0, 0, screen_width, 50))
+        inventory_text = font.render("||", True, (46, 54, 63))
+        back_button_rect = inventory_text.get_rect()
+        back_button_rect.topleft = (760, 10)
+        screen.blit(inventory_text, back_button_rect)
+                
+
+
+
 
         elapsed_time = player.update_timer()
         inventory_text = font.render(f"Время: {elapsed_time} сек", True, (46, 54, 63))
