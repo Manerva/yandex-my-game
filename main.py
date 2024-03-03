@@ -289,7 +289,6 @@ class Player:
         screen.blit(popup_surface, (popup_x, popup_y))
         pygame.display.flip()
 
-        # Ожидание закрытия всплывающего окна
         waiting_for_close = True
         while waiting_for_close:
             for event in pygame.event.get():
@@ -300,13 +299,10 @@ class Player:
                     mouse_x, mouse_y = pygame.mouse.get_pos()
                     if button1_rect.collidepoint(mouse_x - popup_x, mouse_y - popup_y):
                         waiting_for_close = False
-                        # Переход на следующий уровень
                         self.current_level += 1
-                        # Проверка что уровни не закончились
                         if self.current_level > len(self.levels):
                             main_menu()
                         else:
-                            # Запуск следующего уровня
                             run_game(self.current_level)
                         waiting_for_close = False
                     elif button2_rect.collidepoint(mouse_x - popup_x, mouse_y - popup_y):
@@ -377,7 +373,6 @@ def level_menu():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 for i, button in enumerate(level_buttons):
                     if button.collidepoint(event.pos):
-                        print(f"Запущен уровень {i + 1}")
                         run_game(i + 1)
                 if back_button_rect.collidepoint(event.pos):
                     main_menu()
@@ -416,7 +411,6 @@ def show_pause_screen():
     screen.blit(popup_surface, (popup_x, popup_y))
     pygame.display.flip()
 
-    # Ожидание закрытия всплывающего окна
     waiting_for_close = True
     while waiting_for_close:
         for event in pygame.event.get():
@@ -428,7 +422,7 @@ def show_pause_screen():
                 if play_button_rect.collidepoint(mouse_x - popup_x, mouse_y - popup_y):
                     waiting_for_close = False
                     global paused
-                    paused = False  # Возобновление игры
+                    paused = False
                 elif menu_button_rect.collidepoint(mouse_x - popup_x, mouse_y - popup_y):
                     main_menu()
                     waiting_for_close = False
@@ -449,7 +443,6 @@ def run_game(level):
     player = Player(1, 1, level)
     player.start_time = time.time()
 
- 
     running = True
     while running:
         for event in pygame.event.get():
@@ -474,13 +467,9 @@ def run_game(level):
                 elif event.key == pygame.K_d or event.key == pygame.K_RIGHT:
                     player.move(1, 0)
 
-
-
             if event.type == pygame.MOUSEBUTTONDOWN:
-                # Проверка, был ли клик в пределах back_button_rect
                 if back_button_rect.collidepoint(event.pos):
                     show_pause_screen()
-                    print("Клик на кнопке!")
 
         elapsed_time = player.update_timer()
         screen.fill((90, 120, 147))
@@ -498,10 +487,6 @@ def run_game(level):
         back_button_rect = inventory_text.get_rect()
         back_button_rect.topleft = (760, 10)
         screen.blit(inventory_text, back_button_rect)
-                
-
-
-
 
         elapsed_time = player.update_timer()
         inventory_text = font.render(f"Время: {elapsed_time} сек", True, (46, 54, 63))
